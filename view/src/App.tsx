@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import Auth from "./components/auth/Auth.tsx"
 
@@ -18,7 +18,6 @@ function App() {
     <div className="App">
       {authenticated ? (
         <div>
-          {/* Render authenticated content */}
           <h1>Welcome to the App!</h1>
           <p>Authenticated content goes here...</p>
         </div>

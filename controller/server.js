@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 5000;
 
 // Enable CORS
 app.use(cors());
-app.use(express.static(path.join(__dirname, "/frontend/")))
+app.use(express.static(path.join(__dirname, "../view/dist/")))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json());
 app.use(cookieParser())
@@ -65,6 +65,10 @@ const insertMissingEntries = (userid) => {
     });
 };
 
+app.get("/", (req,res) => {
+  res.sendFile(path.join(__dirname, "../view/dist/index.html"))
+})
+
 // Get Squares for a User
 app.get('/squares', (req, res) => {
     const userid = parseInt(req.query.userid, 10);
@@ -93,7 +97,7 @@ app.post("/login", (req, res) => {
       res.cookie("userid", userid, { maxAge: 900000, httpOnly: true });
       insertMissingEntries(userid);
       res.cookie("authenticated", { maxAge: 900000, httpOnly: true })
-      res.redirect("/")
+      res.status(200).json({valid: true})
     }
   });
 })

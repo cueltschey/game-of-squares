@@ -1,4 +1,7 @@
-import React from 'react'
+import {useState} from "react"
+import Navbar from "../utils/Navbar.tsx"
+import Login from "./Login.tsx"
+import Register from "./Register.tsx"
 
 interface Props {
   onSuccess: () => void;
@@ -6,8 +9,13 @@ interface Props {
 
 
 const Auth = ({onSuccess}: Props) => {
+  const [page, setPage] = useState(0);
+  const pages: string[] = ["login", "register"]
   return (
-    <div>Auth</div>
+    <div>
+      <Navbar changePage={(index) => setPage(index)} page={page} pages={pages} />
+      {page === 0? <Login onSuccess={onSuccess}/> : <Register/>}
+    </div>
   )
 }
 

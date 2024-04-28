@@ -1,0 +1,9 @@
+.navitem{
+  color: black;
+}
+.navitem.active{
+  color: red;
+}
+.navlist{
+  list-style: none;
+}
