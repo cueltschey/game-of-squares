@@ -14,7 +14,7 @@ const Auth = ({onSuccess}: Props) => {
   return (
     <div>
       <Navbar changePage={(index) => setPage(index)} page={page} pages={pages} />
-      {page === 0? <Login onSuccess={onSuccess}/> : <Register/>}
+      {page === 0? <Login onSuccess={onSuccess}/> : <Register onSuccess={onSuccess}/>}
     </div>
   )
 }

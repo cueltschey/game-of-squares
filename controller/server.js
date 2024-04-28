@@ -102,6 +102,36 @@ app.post("/login", (req, res) => {
   });
 })
 
+// Register post
+app.post('/register', (req, res) => {
+    const { username, password, email } = req.body;
+
+    // Check if username is already taken
+    db.get('SELECT * FROM users WHERE username = ?', [username], (err, row) => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Internal server error' });
+            return;
+        }
+
+        if (row) {
+            // Username already exists
+            res.status(400).json({ error: 'Username already exists' });
+            return;
+        }
+
+        // Insert the new user into the database
+        db.run('INSERT INTO users (username, password, email) VALUES (?, ?)', [username, password, email], (err) => {
+            if (err) {
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
+            } else {
+                res.status(201).send('User registered successfully');
+            }
+        });
+    });
+});
+
 
 
 // Start server

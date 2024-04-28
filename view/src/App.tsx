@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import Auth from "./components/auth/Auth.tsx"
+import Main from "./components/main/Main.tsx"
+import "./App.css"
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -15,12 +17,9 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      {authenticated ? (
-        <div>
-          <h1>Welcome to the App!</h1>
-          <p>Authenticated content goes here...</p>
-        </div>
+    <div className="main">
+      {1 ? (
+        <Main />
       ) : (
         <Auth onSuccess={() => setAuthenticated(true)} />
       )}

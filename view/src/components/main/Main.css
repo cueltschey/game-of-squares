@@ -1,0 +1,5 @@
+span.Resizer.vertical {
+  cursor: col-resize;
+  width: 20px;
+  background: white;
+}
