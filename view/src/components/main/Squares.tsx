@@ -1,18 +1,24 @@
-import React from 'react'
 
 interface Square {
-  
+  id : number;
+  date: string;
+  userid : number;
+  status : number;
 }
 
-interface Props: {
+interface Props {
   squares : Square[];
   selected : number;
-  setSelected: (index) => void;
+  setSelected: (index : number) => void;
 }
 
 const Squares = ({squares, selected, setSelected}:Props) => {
   return (
-    <div>Squares</div>
+    <div>
+    {squares.map((square : Square, index : number) => (
+      <li key={index} className={index === selected? "square" : "square selected"} onClick={() => setSelected(index)}>{square.date}</li>
+    ))}
+    </div>
   )
 }
 

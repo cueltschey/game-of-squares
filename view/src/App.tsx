@@ -18,7 +18,7 @@ function App() {
 
   return (
     <div className="main">
-      {1 ? (
+      {authenticated ? (
         <Main />
       ) : (
         <Auth onSuccess={() => setAuthenticated(true)} />

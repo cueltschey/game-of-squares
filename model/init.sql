@@ -1,25 +1,25 @@
 CREATE TABLE square (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INTEGER PRIMARY KEY,
     date DATE,
-    userid INT,
-    status INT,
+    userid INTEGER,
+    status INTEGER,
     FOREIGN KEY (userid) REFERENCES users(id)
 );
 
 CREATE TABLE users (
-    userid INT AUTO_INCREMENT PRIMARY KEY,
+    userid INTEGER PRIMARY KEY,
     name VARCHAR(255),
     email VARCHAR(255),
     password VARCHAR(255)
 );
 
 CREATE TABLE tasks (
-    taskid INT AUTO_INCREMENT PRIMARY KEY,
+    taskid INTEGER PRIMARY KEY,
     name VARCHAR(255),
     description TEXT,
     completed BOOLEAN DEFAULT FALSE,
-    userid INT,
-    squareid INT,
+    userid INTEGER,
+    squareid INTEGER,
     FOREIGN KEY (userid) REFERENCES users(userid),
     FOREIGN KEY (squareid) REFERENCES square(id)
 );

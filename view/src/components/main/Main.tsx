@@ -1,7 +1,16 @@
-import SplitPane, {Pane} from "react-split-pane"
 import "./Main.css"
 import Squares from "./Squares.tsx"
 import Edit from "./Edit.tsx"
+import {useEffect, useState} from 'react'
+
+const getCookie = (name : string) => {
+  console.log(document.cookie)
+ const cookies : any = document.cookie
+   .split("; ")
+   .find((row) => row.startsWith(`${name}=`));
+
+ return cookies ? cookies.split("=")[1] : null;
+};
 
 const Main = () => {
   const [selected, setSelected] = useState(0);
@@ -10,7 +19,8 @@ const Main = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/data'); // Assuming your local endpoint is '/api/data'
+        const userid : string | null = getCookie("userid")
+        const response = await fetch(`/squares?userid=${userid}`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
@@ -26,14 +36,14 @@ const Main = () => {
 
 
   return (
-    <SplitPane split="vertical" defaultSize="50%">
-      <Pane >
+    <div className="split">
+      <div >
         <Squares squares={squares} setSelected={(index : number) => setSelected(index)} selected={selected} />
-      </Pane>
-      <Pane >
+      </div>
+      <div >
         <Edit />
-      </Pane>
-    </SplitPane>
+      </div>
+    </div>
   )
 }
 

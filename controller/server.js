@@ -74,6 +74,7 @@ app.get('/squares', (req, res) => {
     const userid = parseInt(req.query.userid, 10);
     if(!userid){
       res.status(405).json({ error: 'Bad Request: userid required' });
+      return;
     }
     db.all(`SELECT * FROM square WHERE userid = ${userid}`, (err, rows) => {
       if (err) {
@@ -87,13 +88,14 @@ app.get('/squares', (req, res) => {
 
 // Login post
 app.post("/login", (req, res) => {
-  const {username, password } = req.body;
+  const { username, password } = req.body;
   db.get(`SELECT * FROM users WHERE name = '${username}' AND password = '${password}'`, (err, row) => {
     if (err) {
       console.error(err);
       res.status(500).json({ error: 'Internal server error' });
     } else {
-      const userid = row.userid
+      const userid = row
+      console.log("Sending User ID: ",userid)
       res.cookie("userid", userid, { maxAge: 900000, httpOnly: true });
       insertMissingEntries(userid);
       res.cookie("authenticated", { maxAge: 900000, httpOnly: true })
@@ -121,7 +123,7 @@ app.post('/register', (req, res) => {
         }
 
         // Insert the new user into the database
-        db.run('INSERT INTO users (username, password, email) VALUES (?, ?)', [username, password, email], (err) => {
+        db.run('INSERT INTO users (userid, username, password, email) VALUES (NULL, ?, ?, ?)', [username, password, email], (err) => {
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Internal server error' });
