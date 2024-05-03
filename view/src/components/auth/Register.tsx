@@ -3,9 +3,10 @@ import axios from 'axios';
 
 interface Props{
   onSuccess: () => void;
+  setUserid: (index: number) => void;
 }
 
-const Register = ({ onSuccess }:Props) =>  {
+const Register = ({ onSuccess, setUserid }:Props) =>  {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,7 +19,8 @@ const Register = ({ onSuccess }:Props) =>  {
       const response = await axios.post('/register', { username, email, password });
       if (response.status === 201) {
         // Registration successful
-        onSuccess
+        onSuccess()
+        setUserid(response.data.userid)
       }
     } catch (error) {
       setError('Registration failed');

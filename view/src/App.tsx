@@ -6,6 +6,7 @@ import "./App.css"
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
+  const [userid, setUserid] = useState(0);
 
   useEffect(() => {
     // Check if the authenticated cookie exists
@@ -19,9 +20,9 @@ function App() {
   return (
     <div className="main">
       {authenticated ? (
-        <Main />
+        <Main userid={userid}/>
       ) : (
-        <Auth onSuccess={() => setAuthenticated(true)} />
+        <Auth onSuccess={() => setAuthenticated(true)} setUserid={(index) => setUserid(index)}/>
       )}
     </div>
   );

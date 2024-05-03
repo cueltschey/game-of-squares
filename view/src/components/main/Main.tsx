@@ -3,23 +3,17 @@ import Squares from "./Squares.tsx"
 import Edit from "./Edit.tsx"
 import {useEffect, useState} from 'react'
 
-const getCookie = (name : string) => {
-  console.log(document.cookie)
- const cookies : any = document.cookie
-   .split("; ")
-   .find((row) => row.startsWith(`${name}=`));
+interface Props{
+  userid: number
+}
 
- return cookies ? cookies.split("=")[1] : null;
-};
-
-const Main = () => {
+const Main = ({userid}:Props) => {
   const [selected, setSelected] = useState(0);
   const [squares, setSquares] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userid : string | null = getCookie("userid")
         const response = await fetch(`/squares?userid=${userid}`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');

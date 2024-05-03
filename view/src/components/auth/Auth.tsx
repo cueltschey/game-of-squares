@@ -5,16 +5,17 @@ import Register from "./Register.tsx"
 
 interface Props {
   onSuccess: () => void;
+  setUserid: (index : number) => void
 }
 
 
-const Auth = ({onSuccess}: Props) => {
+const Auth = ({onSuccess, setUserid}: Props) => {
   const [page, setPage] = useState(0);
   const pages: string[] = ["login", "register"]
   return (
     <div>
       <Navbar changePage={(index) => setPage(index)} page={page} pages={pages} />
-      {page === 0? <Login onSuccess={onSuccess}/> : <Register onSuccess={onSuccess}/>}
+      {page === 0? <Login onSuccess={onSuccess} setUserid={setUserid}/> : <Register onSuccess={onSuccess} setUserid={setUserid}/>}
     </div>
   )
 }

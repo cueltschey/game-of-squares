@@ -3,9 +3,10 @@ import axios from 'axios';
 
 interface Props{
   onSuccess: () => void;
+  setUserid: (index: number) => void;
 }
 
-const Login = ({ onSuccess }:Props) => {
+const Login = ({ onSuccess, setUserid }:Props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -17,6 +18,8 @@ const Login = ({ onSuccess }:Props) => {
       const response = await axios.post('/login', { username, password });
       if (response.status === 200) {
         // Authentication successful
+        setUserid(response.data.userid)
+        console.log(response)
         onSuccess()
       } else {
         setError('Invalid username or password');

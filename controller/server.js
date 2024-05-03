@@ -22,8 +22,8 @@ const db = new sqlite3.Database('../model/squares.db');
 const insertMissingEntries = (userid) => {
     const currentDate = new Date().toISOString().split('T')[0]; // Get current date (YYYY-MM-DD format)
     // Query to get the most recent entry date
-    const recentDateQuery = 'SELECT MAX(date) AS maxDate FROM square';
-    db.get(recentDateQuery, [], (err, row) => {
+    const recentDateQuery = 'SELECT MAX(date) AS maxDate FROM squares WHERE userid = ?';
+    db.get(recentDateQuery, [userid], (err, row) => {
         if (err) {
             console.error(err);
             return;
@@ -43,8 +43,8 @@ const insertMissingEntries = (userid) => {
             
             // Check if an entry exists for the current date
             const formattedDate = currentDateIterator.toISOString().split('T')[0];
-            const query = 'SELECT COUNT(*) AS count FROM square WHERE date = ?';
-            db.get(query, [formattedDate], (err, row) => {
+            const query = 'SELECT COUNT(*) AS count FROM squares WHERE date = ? AND userid = ?';
+            db.get(query, [formattedDate, userid], (err, row) => {
                 if (err) {
                     console.error(err);
                     return;
@@ -52,11 +52,11 @@ const insertMissingEntries = (userid) => {
 
                 // If no entry exists, insert a new entry for the current date
                 if (row.count === 0) {
-                    db.run('INSERT INTO square (date, userid, status) VALUES (?, ?, ?)', [formattedDate, userid, 0], (err) => {
+                    db.run('INSERT INTO squares (date, userid, completed, total) VALUES (?, ?, ?, (SELECT COUNT(*) FROM tasks))', [formattedDate, userid, 0], (err) => {
                         if (err) {
                             console.error(err);
                         } else {
-                            console.log(`New entry inserted for ${formattedDate}`);
+                            console.log(`New entry inserted for ${formattedDate} with userid: ${userid}`);
                         }
                     });
                 }
@@ -64,6 +64,35 @@ const insertMissingEntries = (userid) => {
         }
     });
 };
+
+const isnertInitial = (userid) => {
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    // Check if an entry exists for the current date
+    const query = 'SELECT COUNT(*) AS count FROM squares WHERE date = ? AND userid = ?';
+
+    db.get(query, [currentDate, userid], (err, row) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+
+        // If no entry exists, insert a new entry for the current date
+        if (row.count === 0) {
+            db.run('INSERT INTO squares (date, userid, completed, total) VALUES (?, ?, ?, (SELECT COUNT(*) FROM tasks))', [currentDate, userid, 0], (err) => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    console.log(`New entry inserted for ${currentDate} with userid: ${userid}`);
+                }
+            });
+        } else {
+            console.log(`Entry already exists for ${currentDate}`);
+        }
+    });
+};
+
+
 
 app.get("/", (req,res) => {
   res.sendFile(path.join(__dirname, "../view/dist/index.html"))
@@ -76,7 +105,7 @@ app.get('/squares', (req, res) => {
       res.status(405).json({ error: 'Bad Request: userid required' });
       return;
     }
-    db.all(`SELECT * FROM square WHERE userid = ${userid}`, (err, rows) => {
+    db.all(`SELECT * FROM squares WHERE userid = ${userid}`, (err, rows) => {
       if (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
@@ -94,12 +123,12 @@ app.post("/login", (req, res) => {
       console.error(err);
       res.status(500).json({ error: 'Internal server error' });
     } else {
-      const userid = row
+      const userid = row.userid
       console.log("Sending User ID: ",userid)
       res.cookie("userid", userid, { maxAge: 900000, httpOnly: true });
       insertMissingEntries(userid);
       res.cookie("authenticated", { maxAge: 900000, httpOnly: true })
-      res.status(200).json({valid: true})
+      res.status(200).json({userid: userid})
     }
   });
 })
@@ -109,7 +138,7 @@ app.post('/register', (req, res) => {
     const { username, password, email } = req.body;
 
     // Check if username is already taken
-    db.get('SELECT * FROM users WHERE username = ?', [username], (err, row) => {
+    db.get('SELECT * FROM users WHERE name = ?', [username], (err, row) => {
         if (err) {
             console.error(err);
             res.status(500).json({ error: 'Internal server error' });
@@ -123,18 +152,21 @@ app.post('/register', (req, res) => {
         }
 
         // Insert the new user into the database
-        db.run('INSERT INTO users (userid, username, password, email) VALUES (NULL, ?, ?, ?)', [username, password, email], (err) => {
+        db.run('INSERT INTO users (name, password, email) VALUES (?, ?, ?)', [username, password, email], function(err) {
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Internal server error' });
-            } else {
-                res.status(201).send('User registered successfully');
-            }
+                return;
+            } 
+            // Get the last inserted user's ID (userid)
+            const userid = this.lastID;
+            isnertInitial(userid)
+            console.log(userid)
+            // Return JSON with userid on success
+            res.status(201).json({ userid: userid });
         });
     });
 });
-
-
 
 // Start server
 app.listen(PORT, () => {
