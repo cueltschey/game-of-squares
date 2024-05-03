@@ -6,7 +6,8 @@ import "./App.css"
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
-  const [userid, setUserid] = useState(0);
+  const storedId : number = parseInt(localStorage.getItem('userid') || '0')
+  const [userid, setUserid] = useState(storedId);
 
   useEffect(() => {
     // Check if the authenticated cookie exists

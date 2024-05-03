@@ -19,8 +19,9 @@ const Register = ({ onSuccess, setUserid }:Props) =>  {
       const response = await axios.post('/register', { username, email, password });
       if (response.status === 201) {
         // Registration successful
-        onSuccess()
         setUserid(response.data.userid)
+        localStorage.setItem('userid', response.data.userid)
+        onSuccess()
       }
     } catch (error) {
       setError('Registration failed');

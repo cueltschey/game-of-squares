@@ -1,0 +1,17 @@
+.square{
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid white;
+  cursor: pointer;
+  transition: border 0.25s ease-in;
+}
+
+.square.selected{
+  border: 1px solid #345634;
+}
+
+.square.dull{
+  border: 0px;
+}
+

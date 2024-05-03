@@ -1,5 +1,15 @@
-span.Resizer.vertical {
-  cursor: col-resize;
-  width: 10px;
-  border-left: 1px solid white;
+.split-pane {
+  display: flex;
+  height: 100%;
 }
+
+.pane {
+  overflow: auto;
+}
+
+.divider {
+  width: 5px;
+  cursor: col-resize;
+  border: 1px solid white;
+}
+
