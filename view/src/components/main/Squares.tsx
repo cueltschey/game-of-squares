@@ -34,10 +34,10 @@ function iterateDaysBefore(squares: Square[]) {
     if(!firstSquare){
       return [];
     }
-    const startDate = new Date(parseInt(firstSquare.date.split("-")[0]), parseInt(firstSquare.date.split("-")[1]), parseInt(firstSquare.date.split("-")[2]) - 1)
-    const endDate = new Date(startDate.getFullYear(), startDate.getMonth(), 0);
+    const endDate = new Date(parseInt(firstSquare.date.split("-")[0]), parseInt(firstSquare.date.split("-")[1]), parseInt(firstSquare.date.split("-")[2]) - 1)
+    const startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 0);
     const daysArray = [];
-    for (let date = startDate; date >= endDate; date.setDate(date.getDate() - 1)) {
+    for (let date = startDate; date < endDate; date.setDate(date.getDate() - 1)) {
         console.log(date)
         daysArray.push(new Date(date));
     }
