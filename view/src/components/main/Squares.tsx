@@ -34,8 +34,8 @@ function iterateDaysBefore(squares: Square[]) {
     if(!firstSquare){
       return [];
     }
-    const endDate = new Date(parseInt(firstSquare.date.split("-")[0]), parseInt(firstSquare.date.split("-")[1]), parseInt(firstSquare.date.split("-")[2]) - 1)
-    const startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 0);
+    const startDate = new Date(parseInt(firstSquare.date.split("-")[0]), parseInt(firstSquare.date.split("-")[1]), parseInt(firstSquare.date.split("-")[2]) - 1)
+    const endDate = new Date(startDate.getFullYear(), startDate.getMonth(), 0);
     const daysArray = [];
     for (let date = startDate; date < endDate; date.setDate(date.getDate() - 1)) {
         console.log(date)
@@ -50,33 +50,31 @@ const Squares = ({squares, selected, setSelected}:Props) => {
   const daysAfter= iterateDaysAfter(squares)
   const daysBefore = iterateDaysBefore(squares)
   return (
-    <table>
-    {daysBefore && <br></br>}
+    <div style={{ display: "flex" }}>
     {daysBefore.map((day: Date, index: number) => (
-      <td key={index}
+      <li key={index}
           id={day.getDate().toString()}
           className="square dull"
           style={{"backgroundColor":"rgb(34,34,34,0.5)"}}>
-      </td>
+      </li>
     ))}
     {squares.map((square : Square, index : number) => (
-      <td key={index} 
+      <li key={index} 
           id={square.date}
           className={index === selected? "square selected" : "square"} 
           style={square.completed === 0? {"backgroundColor":'rgb(34, 34, 34, 0.5)'} :
             {"backgroundColor":`rgb(34,${(square.completed / square.total) * 170},34)`}}
           onClick={() => setSelected(index)}>
-      </td>
+      </li>
     ))}
     {daysAfter.map((day: Date, index: number) => (
-      <td key={index}
+      <li key={index}
           id={day.getDate().toString()}
           className="square dull"
           style={{"backgroundColor":"rgb(34,34,34,0.5)"}}>
-      </td>
+      </li>
     ))}
-    {daysAfter && <tr></tr>}
-    </table>
+    </div>
   )
 }
 
