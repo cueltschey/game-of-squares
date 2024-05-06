@@ -41,7 +41,9 @@ const insertMissingEntries = (userid) => {
         console.error(err)
         return;
       }
-      currentTasks = rows;
+      rows.forEach(row => {
+          currentTasks.push(row.taskid)
+        })
       })
     })
 
@@ -68,18 +70,18 @@ const insertMissingEntries = (userid) => {
             if (err) {
               console.error(err);
             } else {
-              console.log(`New entry inserted for ${formattedDate} with userid: ${userid}`);
+              console.log(`New square inserted for ${formattedDate} with userid: ${userid}`);
+              currentTasks.forEach(taskid => {
+                db.run('INSERT INTO list (userid, squareid, taskid) VALUES (?, ?, ?)', [userid, currentId, taskid], (err) => {
+                  if (err) {
+                    console.error(err);
+                  } else {
+                    console.log(`New Task inserted for userid: ${userid} squareid: ${currentId} taskid: ${taskid}`);
+                  }
+                });
+              })
             }
           });
-          for(task in currentTasks){
-            db.run('INSERT INTO list (userid, squareid, taskid) VALUES (?, ?, ?)', [userid, currentId, task.taskid], (err) => {
-              if (err) {
-                console.error(err);
-              } else {
-                console.log(`New Task inserted for ${currentId}`);
-              }
-            });
-          }
         }
       });
     }

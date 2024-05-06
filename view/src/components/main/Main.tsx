@@ -70,7 +70,9 @@ const  Main = ({userid}:Props) => {
   return (
     <div className="split-pane" ref={containerRef}>
       <div className="pane" style={{ width: leftPaneWidth }}>
-        <Edit />
+        <Edit
+        selected={selected}
+        squares={squares}/>
       </div>
       <div className="divider" onMouseDown={handleMouseDown}></div>
       <div className="pane" style={{ flex: 1 }}>
