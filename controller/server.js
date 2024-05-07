@@ -212,6 +212,32 @@ app.get('/tasks', (req, res) => {
   });
 });
 
+app.post("/update/:userid/:listid", async (req,res) => {
+  const userid = req.params.userid;
+  const listid = req.params.listid;
+  const completed = req.query.completed
+  if(!userid){
+    res.status(405).json({ error: 'Bad Request: userid required' });
+    return;
+  }
+  if(!listid){
+    res.status(405).json({ error: 'Bad Request: listid required' });
+    return;
+  }
+  if(!completed){
+    res.status(405).json({ error: 'Bad Request: listid required' });
+    return;
+  }
+  db.run('UPDATE list SET completed = ? WHERE userid = ? AND id = ?', [completed, userid, listid], (err) => {
+    if(err){
+      res.status(500).send("Internal Server Error")
+      return;
+    } else{
+      res.status(200).json({completed:completed})
+    }
+  })
+})
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

@@ -75,6 +75,13 @@ const Edit = ({selected, squares, userid, taskTypes}:Props) => {
       if (!response.ok) {
         throw new Error('Failed to update task');
       }
+      const updatedTasks = tasks.map(task => {
+                if (task.id === listId) {
+                    return { ...task, completed: isChecked ? 1 : 0 };
+                }
+                return task;
+            });
+            setTasks(updatedTasks);
     } catch (error) {
       console.error('Error updating task:', error);
     }
