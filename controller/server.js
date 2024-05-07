@@ -85,7 +85,7 @@ const insertTasks = async (userid, squareid) => {
         return;
       } 
       const promises = rows.map(async item => {
-        return await db.run('INSERT INTO list (userid, squareid, taskid) VALUES (?, ?, ?)', [userid, squareid, item.taskid], (err) => {
+        return await db.run('INSERT INTO list (userid, squareid, taskid, completed) VALUES (?, ?, ?, ?)', [userid, squareid, item.taskid, 0], (err) => {
           if (err) {
             console.error(err);
           } else {

@@ -28,19 +28,28 @@ interface Task {
   userid: number;
   squareid: number;
   taskid: number;
+  completed: number;
+}
+
+interface TaskType {
+  taskid: number;
+  name: string;
+  description: string;
+  userid: number;
 }
 
 interface Props {
   squares : Square[];
   selected : number;
   userid : number;
+  taskTypes: TaskType[];
 }
 
 
 
 
 
-const Edit = ({selected, squares, userid}:Props) => {
+const Edit = ({selected, squares, userid, taskTypes}:Props) => {
   const [tasks, setTasks] = useState<Task[]>([])
 
   useEffect(() => {
@@ -68,7 +77,7 @@ const Edit = ({selected, squares, userid}:Props) => {
         {" " + squares[selected].date.split("-")[2]}  {squares[selected].date.split("-")[0]}
       </h1>
       <p>{tasks.map((task: Task, index: number) => (
-        <li key={index}>{task.squareid}{task.id}</li>
+        <li key={index}>{taskTypes[task.taskid - 1].name}{taskTypes[task.taskid - 1].description}here: {task.completed}</li>
       ))}</p>
       </>
       ) : <>selected 0</>
