@@ -78,34 +78,24 @@ const insertInitial = (userid) => {
   });
 };
 
-const insertTasks = (userid, squareid) => {
-  let allTasks = []
-  let lastId = 0;
-  db.run('SELECT * FROM squares WHERE (SELECT MAX(date) FROM squares)', (err,row) => {
+const insertTasks = async (userid, squareid) => {
+  await db.all('SELECT taskid FROM tasks', async (err, rows) => {
       if(err){
         console.error(err)
         return;
-      }
-    console.log(row.id)
-      lastId = row
+      } 
+      const promises = rows.map(async item => {
+        return await db.run('INSERT INTO list (userid, squareid, taskid) VALUES (?, ?, ?)', [userid, squareid, item.taskid], (err) => {
+          if (err) {
+            console.error(err);
+          } else {
+            console.log(`New Task inserted for userid: ${userid} taskid: ${item.taskid}`);
+          }
+        });
+      })
+      await Promise.all(promises) 
     })
-  db.all('SELECT taskid FROM list WHERE squareid = ?', [lastId], (err, rows) => {
-      if(err){
-        console.error(err)
-        return;
-      }
-      rows.forEach(row => {allTasks.push(row.taskid)})
-    })
-  allTasks.forEach(taskid => {
-    db.run('INSERT INTO list (userid, squareid, taskid) VALUES (?, ?, ?)', [userid, squareid, taskid], (err) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log(`New Task inserted for userid: ${userid} squareid: ${currentId} taskid: ${taskid}`);
-      }
-    });
-  })
-}
+  }
 
 
 
@@ -169,13 +159,12 @@ app.post('/register', (req, res) => {
       } 
       const userid = this.lastID;
       insertInitial(userid)
-      console.log(userid)
       res.status(201).json({ userid: userid });
     });
   });
 });
 
-app.get("/list/:userid/:squareid", (req,res) => {
+app.get("/list/:userid/:squareid", async (req,res) => {
   const userid = req.params.userid;
   const squareid = req.params.squareid;
   if(!userid){
@@ -186,13 +175,23 @@ app.get("/list/:userid/:squareid", (req,res) => {
     res.status(405).json({ error: 'Bad Request: squareid required' });
     return;
   }
-  insertTasks(userid, squareid)
-  db.all('SELECT * FROM list WHERE userid = ? AND squareid = ?', [userid, squareid], (err, rows) => {
+  db.all('SELECT * FROM list WHERE userid = ? AND squareid = ?', [userid, squareid], async (err, rows) => {
     if(err){
       res.status(500).send("Internal Server Error")
       return;
     } else{
-      res.json(rows)
+      if(rows.length === 0){
+        await insertTasks(userid, squareid)
+        db.all("SELECT * FROM list WHERE userid = ? AND squareid = ?", [userid, squareid], (err,rows) => {
+          if(err){
+            res.status(500).send("Internal Server Error")
+            return;
+          }
+          res.json(rows)
+        })
+      } else{
+        res.json(rows)
+      }
     }
   })
 })
