@@ -196,6 +196,22 @@ app.get("/list/:userid/:squareid", async (req,res) => {
   })
 })
 
+app.get('/tasks', (req, res) => {
+  const userid = parseInt(req.query.userid, 10);
+  if(!userid){
+    res.status(405).json({ error: 'Bad Request: userid required' });
+    return;
+  }
+  db.all(`SELECT * FROM tasks WHERE userid = ${userid}`, (err, rows) => {
+    if (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+    } else {
+    res.json(rows);
+    }
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
