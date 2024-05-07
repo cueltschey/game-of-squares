@@ -72,7 +72,8 @@ const  Main = ({userid}:Props) => {
       <div className="pane" style={{ width: leftPaneWidth }}>
         <Edit
         selected={selected}
-        squares={squares}/>
+        squares={squares}
+        userid={userid}/>
       </div>
       <div className="divider" onMouseDown={handleMouseDown}></div>
       <div className="pane" style={{ flex: 1 }}>

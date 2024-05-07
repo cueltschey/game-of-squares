@@ -23,23 +23,39 @@ interface Square {
   total : number;
 }
 
+interface Task {
+  id: number;
+  userid: number;
+  squareid: number;
+  taskid: number;
+}
+
 interface Props {
   squares : Square[];
   selected : number;
+  userid : number;
 }
 
 
 
 
 
-const Edit = ({selected, squares}:Props) => {
-  const [title, setTitle] = useState<string>("")
+const Edit = ({selected, squares, userid}:Props) => {
+  const [tasks, setTasks] = useState<Task[]>([])
 
   useEffect(() => {
     const getList = async () => {
-      console.log("testing")
-      setTitle("test")
-    }
+      try {
+        const response = await fetch(`/list/${userid}/${squares[selected].id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const jsonData = await response.json();
+        setTasks(jsonData)
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
     getList()
   }, [selected])
     
@@ -47,9 +63,13 @@ const Edit = ({selected, squares}:Props) => {
     <>
       {selected > 0 ? (
       <>
-      <h1>{title}</h1>
-      <p>{squares[selected].date}</p>
-      <p>{monthMap.get(squares[selected].date.split("-")[1])}</p>
+      <h1>
+        {monthMap.get(squares[selected].date.split("-")[1])}
+        {" " + squares[selected].date.split("-")[2]}  {squares[selected].date.split("-")[0]}
+      </h1>
+      <p>{tasks.map((task: Task, index: number) => (
+        <li key={index}>{task.squareid}{task.id}</li>
+      ))}</p>
       </>
       ) : <>selected 0</>
       }
