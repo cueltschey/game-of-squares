@@ -99,6 +99,7 @@ const insertTasks = async (userid, squareid) => {
 
 
 
+
 app.get("/", (req,res) => {
   res.sendFile(path.join(__dirname, "../view/dist/index.html"))
 })
@@ -213,9 +214,9 @@ app.get('/tasks', (req, res) => {
 });
 
 app.post("/update/:userid/:listid", async (req,res) => {
+  const completed = parseInt(req.query.completed, 10);
   const userid = req.params.userid;
   const listid = req.params.listid;
-  const completed = req.query.completed
   if(!userid){
     res.status(405).json({ error: 'Bad Request: userid required' });
     return;
@@ -224,16 +225,18 @@ app.post("/update/:userid/:listid", async (req,res) => {
     res.status(405).json({ error: 'Bad Request: listid required' });
     return;
   }
-  if(!completed){
-    res.status(405).json({ error: 'Bad Request: listid required' });
-    return;
-  }
   db.run('UPDATE list SET completed = ? WHERE userid = ? AND id = ?', [completed, userid, listid], (err) => {
     if(err){
       res.status(500).send("Internal Server Error")
       return;
     } else{
+      db.run('UPDATE squares SET completed = completed + ? WHERE id = (SELECT squareid FROM list WHERE id = ?)', [completed===0?-1:completed, listid], (err) => {
+      if(err){
+        res.status(500).send("Internal Server Error")
+        return;
+      }
       res.status(200).json({completed:completed})
+      })
     }
   })
 })
