@@ -1,6 +1,6 @@
 .square{
-  width: 20px;
-  height: 20px;
+  width: 2vw;
+  height: 2vw;
   border-radius: 4px;
   border: 1px solid white;
   cursor: pointer;

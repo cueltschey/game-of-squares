@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import "./Login.css"
 
 interface Props{
   onSuccess: () => void;
@@ -30,7 +31,7 @@ const Register = ({ onSuccess, setUserid }:Props) =>  {
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h2>Registration</h2>
       <form onSubmit={handleSubmit}>
         <div>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import "./Login.css"
 
 interface Props{
   onSuccess: () => void;
@@ -32,8 +33,8 @@ const Login = ({ onSuccess, setUserid }:Props) => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+    <div className="login-container">
+      <h2 style={{textAlign: "center"}}>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Username:</label>

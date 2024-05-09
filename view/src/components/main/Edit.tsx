@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react'
+import "./Edit.css"
 
 const monthMap = new Map<string, string>([
   ["01", "January"],
@@ -91,20 +92,22 @@ const Edit = ({selected, squares, userid, taskTypes}:Props) => {
     <>
       {selected > 0 ? (
         <>
-          <h1>
+          <h1 className="edit-title">
             {monthMap.get(squares[selected].date.split("-")[1])}
             {" " + squares[selected].date.split("-")[2]}  {squares[selected].date.split("-")[0]}
           </h1>
-          <ul style={{ listStyle: "none" }}>
+          <ul className="edit-list">
             {tasks.map((task: Task, index: number) => (
-              <li key={index}>
+              <li key={index} className="edit-item">
                 <input
                   type="checkbox"
                   checked={task.completed === 1}
                   onChange={(e) => handleCheckboxChange(task.id, e.target.checked)}
                 />
-                {taskTypes[task.taskid - 1].name}
-                {taskTypes[task.taskid - 1].description} here: {task.completed}
+                <ul style={{display: "inline-flex", listStyle: "none", flexDirection: "column", gap: "10px"}}>
+                <li>{taskTypes[task.taskid - 1].name}</li>
+                <li>{taskTypes[task.taskid - 1].description}</li>
+                </ul>
               </li>
             ))}
           </ul>

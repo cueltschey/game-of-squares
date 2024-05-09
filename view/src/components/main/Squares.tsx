@@ -71,8 +71,8 @@ const Squares = ({squares, selected, setSelected}:Props) => {
   const daysBefore = iterateDaysBefore(squares)
   return (
     <div style={{display: "flex", justifyContent: "center", margin: "20px"}}>
-    <ul style={{ display: "inline-flex", width: "100%", flexWrap: "wrap", maxWidth: "288px" }}>
-    <div style={{width:"288px", height:"20px"}}>{squares.length > 0? monthMap.get(squares[0].date.split("-")[1]) : ""}</div>
+    <ul style={{ display: "inline-flex", width: "100%", flexWrap: "wrap", maxWidth: "50vw" }}>
+    <div style={{width:"100%", height:"20px"}}>{squares.length > 0? monthMap.get(squares[0].date.split("-")[1]) : ""}</div>
     {daysBefore.map((day: Date, index: number) => (
       <li key={index}
           id={day.getDate().toString()}
@@ -86,13 +86,15 @@ const Squares = ({squares, selected, setSelected}:Props) => {
           id={square.date}
           className={index === selected? "square selected" : "square"} 
           style={square.completed === 0? {"backgroundColor":'rgb(34, 34, 34, 0.5)'} :
-            {"backgroundColor":`rgb(34,${(34 + (square.completed / square.total) * 170)},${34 + (square.completed / square.total) * 10})`}}
+            {"backgroundColor":
+            `rgb(34,${((square.completed / square.total) * 75)},${(square.completed / square.total) * 100})`}}
           onClick={() => setSelected(index)}>
+          {square.completed} : {square.total}
           </li>
         {isLastDayOfMonth(new Date(parseInt(square.date.split("-")[0]),
               parseInt(square.date.split("-")[1]),
-              parseInt(square.date.split("-")[2]) + 1)) && 
-            <div style={{width:"288px", height:"20px"}}>{parseInt(square.date.split("-")[1]) !== 12? monthMap.get(`0${parseInt(square.date.split("-")[1]) + 1}`) : monthMap.get("01")}</div>
+              parseInt(square.date.split("-")[2]) + 1)) &&
+            <div style={{width:"100%", height:"20px"}}>{parseInt(square.date.split("-")[1]) !== 12? monthMap.get(`0${parseInt(square.date.split("-")[1]) + 1}`) : monthMap.get("01")}</div>
             }
       </>
     ))}
@@ -103,7 +105,7 @@ const Squares = ({squares, selected, setSelected}:Props) => {
           style={{"backgroundColor":"rgb(34,34,34,0.5)"}}>
       </li>
     ))}
-    <div style={{width:"288px", height:"20px"}}/>
+    <div style={{width:"100%", height:"20px"}}/>
     </ul>
     </div>
   )

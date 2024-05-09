@@ -93,6 +93,12 @@ const insertTasks = async (userid, squareid) => {
           }
         });
       })
+      db.run("UPDATE squares SET total = ? WHERE userid = ? AND id = ?", [promises.length, userid, squareid], (err) => {
+        if(err){
+          console.error(err)
+          return
+        }
+      })
       await Promise.all(promises) 
     })
   }
