@@ -87,7 +87,7 @@ const Squares = ({squares, selected, setSelected}:Props) => {
           className={index === selected? "square selected" : "square"} 
           style={square.completed === 0? {"backgroundColor":'rgb(34, 34, 34, 0.5)'} :
             {"backgroundColor":
-            `rgb(34,${((square.completed / square.total) * 75)},${(square.completed / square.total) * 100})`}}
+            `rgb(34,${34 + ((square.completed / square.total) * 200)},${34 + (square.completed / square.total) * 100})`}}
           onClick={() => setSelected(index)}>
           {square.completed} : {square.total}
           </li>
