@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react'
+import Task from "./Task.tsx"
 import "./Edit.css"
 
 const monthMap = new Map<string, string>([
@@ -112,7 +113,7 @@ const Edit = ({selected, squares, userid, taskTypes}:Props) => {
             ))}
           </ul>
         </>
-      ) : <>selected 0</>}
+      ) : <Task userid={userid} />}
     </>
   );}
 
