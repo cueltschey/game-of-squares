@@ -96,7 +96,7 @@ const Edit = ({selected, squares, userid, taskTypes}:Props) => {
             {monthMap.get(squares[selected].date.split("-")[1])}
             {" " + squares[selected].date.split("-")[2]}  {squares[selected].date.split("-")[0]}
           </h1>
-          <ul className="edit-list">
+          <ul className="edit-list" style={{userSelect: "none"}}>
             {tasks.map((task: Task, index: number) => (
               <li key={index} className="edit-item">
                 <input

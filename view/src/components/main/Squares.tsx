@@ -1,4 +1,5 @@
 import "./Squares.css"
+import { isWithinInterval } from 'date-fns'
 
 const monthMap = new Map<string, string>([
     ["01", "January"],
@@ -58,21 +59,27 @@ function iterateDaysBefore(squares: Square[]) {
     return daysArray.reverse();
 }
 
-const isLastDayOfMonth = (date: Date) => {
-    const nextDay = new Date(date);
-    nextDay.setDate(nextDay.getDate() + 1);
-    return nextDay.getMonth() !== date.getMonth();
-}
+function getMonthSpan(dateString : string) {
+    // Parse the date string
+    const [year, month, day] = dateString.split('-').map(Number);
+    console.log(day)
 
+    // Create a Date object for the given month
+    const firstDayOfMonth = new Date(year, month - 1, 1); // Note: month is 0-indexed
+    const lastDayOfMonth = new Date(year, month, 0);
+
+    return { start: firstDayOfMonth, end: lastDayOfMonth };
+}
 
 
 const Squares = ({squares, selected, setSelected}:Props) => {
   const daysAfter= iterateDaysAfter(squares)
   const daysBefore = iterateDaysBefore(squares)
   return (
-    <div style={{display: "flex", justifyContent: "center", margin: "20px"}}>
+    <div style={{display: "flex", justifyContent: "center", margin: "20px", userSelect: "none"}}>
     <ul style={{ display: "inline-flex", width: "100%", flexWrap: "wrap", maxWidth: "50vw" }}>
     <div style={{width:"100%", height:"20px"}}>{squares.length > 0? monthMap.get(squares[0].date.split("-")[1]) : ""}</div>
+    <div style={{width: "2.1vw", height: "2vw"}} />
     {daysBefore.map((day: Date, index: number) => (
       <li key={index}
           id={day.getDate().toString()}
@@ -82,20 +89,21 @@ const Squares = ({squares, selected, setSelected}:Props) => {
     ))}
     {squares.map((square : Square, index : number) => (
       <>
+        {isWithinInterval(new Date(square.date), getMonthSpan(square.date))? <></> :
+            <>
+            <div style={{width:"100%", height:"20px"}}>{parseInt(square.date.split("-")[1]) !== 12? monthMap.get(`0${parseInt(square.date.split("-")[1]) + 1}`) : monthMap.get("01")}</div>
+            <div style={{width: "2.1vw", height: "2vw"}} />
+            </>
+            }
       <li key={index} 
           id={square.date}
           className={index === selected? "square selected" : "square"} 
           style={square.completed === 0? {"backgroundColor":'rgb(34, 34, 34, 0.5)'} :
             {"backgroundColor":
-            `rgb(34,${34 + ((square.completed / square.total) * 200)},${34 + (square.completed / square.total) * 100})`}}
+            `rgb(${34 + ((square.total - square.completed) / square.total) * 50},${34 + ((square.completed / square.total) * 200)},${34 + (square.completed / square.total) * 100})`}}
           onClick={() => setSelected(index)}>
-          {square.completed} : {square.total}
+            <span>{square.completed}:{square.total}</span>
           </li>
-        {isLastDayOfMonth(new Date(parseInt(square.date.split("-")[0]),
-              parseInt(square.date.split("-")[1]),
-              parseInt(square.date.split("-")[2]) + 1)) &&
-            <div style={{width:"100%", height:"20px"}}>{parseInt(square.date.split("-")[1]) !== 12? monthMap.get(`0${parseInt(square.date.split("-")[1]) + 1}`) : monthMap.get("01")}</div>
-            }
       </>
     ))}
     {daysAfter.map((day: Date, index: number) => (

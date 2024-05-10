@@ -6,6 +6,10 @@
   cursor: pointer;
   list-style: none;
   margin: 2px;
+  font: 1vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .square.selected{

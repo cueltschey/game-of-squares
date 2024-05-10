@@ -71,7 +71,15 @@ const  Main = ({userid}:Props) => {
       }
       if(containerRect){
         const newWidth = e.clientX - containerRect.left;
-        setLeftPaneWidth(newWidth>300?newWidth:300);
+        if(newWidth < 300){
+          setLeftPaneWidth(300)
+        }
+        else if(newWidth > 1500){
+          setLeftPaneWidth(1500)
+        }
+        else{
+          setLeftPaneWidth(newWidth);
+        }
       }
     };
 
