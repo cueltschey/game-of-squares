@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import "./Edit.css"
 
 interface Props {
   userid: number;
@@ -18,7 +19,7 @@ const Task = ({userid}:Props) => {
   useEffect(() => {
   const getTasks = async () => {
     try {
-    const response = await fetch(`/tasks/${userid}`);
+    const response = await fetch(`/tasks?userid=${userid}`);
     if (!response.ok) {
       throw new Error('Failed to fetch data');
     }
@@ -50,9 +51,16 @@ const Task = ({userid}:Props) => {
   }
   
   return (
-    <div>{tasks.map((task: TaskType, index: number) => (
-      <li key={index}>{task.name}{task.description}<button onClick={() => deleteTask(task.taskid)}>X</button></li>
-    ))}</div>
+    <div>
+      <ul className="edit-list">
+        {tasks.map((task: TaskType, index: number) => (
+      <li key={index}
+          className="edit-item"
+      >
+        <span className="task-delete" onClick={() => deleteTask(task.taskid)}>X</span>
+        {task.name}{task.description}
+      </li>
+    ))}</ul></div>
   )
 }
 

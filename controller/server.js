@@ -247,6 +247,26 @@ app.post("/update/:userid/:listid", async (req,res) => {
   })
 })
 
+app.delete("/tasks/:userid/:taskid", (req, res) => {
+  const userid = req.params.userid;
+  const taskid = req.params.taskid;
+  if(!userid){
+    res.status(405).json({ error: 'Bad Request: userid required' });
+    return;
+  }
+  if(!taskid){
+    res.status(405).json({ error: 'Bad Request: squareid required' });
+    return;
+  }
+  db.run('DELETE FROM tasks WHERE userid = ? AND taskid = ?', [userid, taskid], (err) => {
+    if(err){
+      res.status(500).send("Internal Server Error")
+      return;
+    }
+  })
+  res.status(200).send("Deleted")
+})
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
