@@ -267,6 +267,30 @@ app.delete("/tasks/:userid/:taskid", (req, res) => {
   res.status(200).send("Deleted")
 })
 
+app.post("/tasks/:userid", (req,res) => {
+  const {name, description} = req.body
+  const userid = req.params.userid
+  if(!userid){
+    res.status(405).json({ error: 'Bad Request: userid required' });
+    return;
+  }
+  if(!name){
+    res.status(405).json({ error: 'Bad Request: name required' });
+    return;
+  }
+  if(!description){
+    res.status(405).json({ error: 'Bad Request: description required' });
+    return;
+  }
+  db.run('INSERT INTO tasks (name, description, userid) VALUES (?, ?, ?)', [name, description, userid], (err) => {
+    if(err){
+      res.status(500).send("Internal Server Error")
+      return;
+    }
+    res.status(200).json({valid:true})
+  })
+})
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
