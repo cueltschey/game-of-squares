@@ -15,6 +15,8 @@ interface TaskType {
 const Task = ({userid}:Props) => {
   const [tasks, setTasks] = useState<TaskType[]>([])
   const [trigger, setTrigger] = useState<number>(0)
+  const [name, setName] = useState<string>("")
+  const [description, setDescription] = useState<string>("")
 
   useEffect(() => {
   const getTasks = async () => {
@@ -49,6 +51,25 @@ const Task = ({userid}:Props) => {
     }
     setTrigger(trigger + 1)
   }
+
+  const addTask = async () => {
+    const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({name, description})
+    };
+    try {
+    const response = await fetch(`/tasks/${userid}`, options);
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
+    }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+    setTrigger(trigger + 1)
+  }
   
   return (
     <div>
@@ -60,7 +81,22 @@ const Task = ({userid}:Props) => {
         <span className="task-delete" onClick={() => deleteTask(task.taskid)}>X</span>
         {task.name}{task.description}
       </li>
-    ))}</ul></div>
+    ))}</ul>
+      <div>
+          <input
+            type="text"
+            placeholder="Task Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <textarea
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <button onClick={() => addTask()}>Add Task</button>
+        </div>
+    </div>
   )
 }
 
