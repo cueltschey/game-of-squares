@@ -291,23 +291,17 @@ app.post("/tasks/:userid", (req,res) => {
   })
 })
 
-app.get("/summary/:userid/:month", (req, res) => {
+app.get("/summary/:userid", (req, res) => {
   const userid = req.params.userid
   if(!userid){
     res.status(405).json({ error: 'Bad Request: User id required' })
   }
   const month = req.params.month
-  if(!month){
-    res.status(405).json({ error: 'Bad Request: month required' })
+  if(!userid){
+    res.status(405).json({ error: 'Bad Request: User id required' })
   }
   let items = []
-  db.all("SELECT l.* FROM list l JOIN squares s ON l.squareid = s.id WHERE l.userid = ? AND strftime('%m', s.date) = ? AND strftime('%Y', s.date) = strftime('%Y', 'now')", [userid, month], (err,rows) => {
-    if(err){
-      res.status(500).send("Internal Server Error")
-      return;
-    }
-    res.json(rows)
-  })
+  db.all('SELECT l.* FROM list l JOIN squares s ON l.squareid = s.id WHERE l.userid = ? AND strftime('%m', s.date) = ?')
 })
 
 app.listen(PORT, () => {
