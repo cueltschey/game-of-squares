@@ -52,8 +52,12 @@ const Stats = ({userid,setSummarySelected}:Props) => {
   }, [monthIndex])
 
   return (
-    <div><button onClick={() => setSummarySelected(0)}>back</button>{summary.length > 0? summary.filter(task => task.completed === 1).length / summary.length : 0}%
-      <button onClick={() => setMonthIndex(monthIndex + 1)}>+</button></div>
+    <div>
+      <button onClick={() => setSummarySelected(0)}>Squares</button><br></br>
+      {monthList[monthIndex]}
+      {summary.length > 0? summary.filter(task => task.completed === 1).length / summary.length : 0}%
+      <button onClick={() => setMonthIndex(monthIndex + 1)}>+</button>
+      <button onClick={() => setMonthIndex(monthIndex - 1)}>-</button></div>
   )
 }
 
