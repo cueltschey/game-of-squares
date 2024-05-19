@@ -1,6 +1,7 @@
 import "./Main.css"
 import Squares from "./Squares.tsx"
 import Edit from "./Edit.tsx"
+import Stats from "../summary/Stats.tsx"
 import { useState, useRef, useEffect } from 'react';
 
 interface Props{
@@ -29,6 +30,7 @@ const  Main = ({userid}:Props) => {
   const [leftPaneWidth, setLeftPaneWidth] = useState<number>(500);
   const containerRef = useRef<HTMLDivElement>(null);
   const isResizingRef = useRef<boolean>(false);
+  const [summarySelected, setSummarySelected] = useState<number>(0)
 
   useEffect(() => {
     const getSquares = async () => {
@@ -101,23 +103,33 @@ const  Main = ({userid}:Props) => {
   };
 
   return (
+  summarySelected === 0 ? (
     <div className="split-pane" ref={containerRef}>
       <div className="pane" style={{ width: leftPaneWidth }}>
         <Edit
-        selected={selected}
-        squares={squares}
-        userid={userid}
-        taskTypes={taskTypes}/>
+          selected={selected}
+          squares={squares}
+          userid={userid}
+          taskTypes={taskTypes}
+        />
       </div>
       <div className="divider" onMouseDown={handleMouseDown}></div>
       <div className="pane" style={{ flex: 1 }}>
-        <Squares 
-        squares={squares} 
-        setSelected={(index : number) => setSelected(index)} 
-        selected={selected} />
+        <button onClick={() => setSummarySelected(1)}>Summary</button>
+        <Squares
+          squares={squares}
+          setSelected={(index: number) => setSelected(index)}
+          selected={selected}
+        />
       </div>
     </div>
-  );
+  ) : (
+    <Stats
+      userid={userid}
+      setSummarySelected={(index) => setSummarySelected(index)}
+    />
+  )
+);
 }
 
 export default Main;
