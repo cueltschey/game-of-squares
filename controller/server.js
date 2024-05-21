@@ -135,10 +135,11 @@ app.post("/login", (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   } else {
     const userid = row.userid
+    const birthdate = row.birthdate
     console.log("Sending User ID: ",userid)
     res.cookie("userid", userid, { maxAge: 900000, httpOnly: true });
     res.cookie("authenticated", { maxAge: 900000, httpOnly: true })
-    res.status(200).json({userid: userid})
+    res.status(200).json({userid: userid, birthdate: birthdate})
   }
   });
 })

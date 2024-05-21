@@ -5,7 +5,8 @@ import Stats from "../summary/Stats.tsx"
 import { useState, useRef, useEffect } from 'react';
 
 interface Props{
-  userid: number
+  userid: number;
+  birthdate: string;
 }
 
 interface Square {
@@ -23,7 +24,7 @@ interface TaskType {
   userid: number;
 }
 
-const  Main = ({userid}:Props) => {
+const  Main = ({userid, birthdate}:Props) => {
   const [selected, setSelected] = useState<number>(0);
   const [squares, setSquares] = useState<Square[]>([]);
   const [taskTypes, setTaskTypes] = useState<TaskType[]>([]);
@@ -126,6 +127,7 @@ const  Main = ({userid}:Props) => {
   ) : (
     <Stats
       userid={userid}
+      birthdate={birthdate}
       setSummarySelected={(index) => setSummarySelected(index)}
     />
   )

@@ -7,6 +7,7 @@ import "./App.css"
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
   const storedId : number = parseInt(localStorage.getItem('userid') || '0')
+  const birthdate : string = localStorage.getItem('birthdate') || '2000-01-01'
   const [userid, setUserid] = useState(storedId);
 
   useEffect(() => {
@@ -21,7 +22,7 @@ function App() {
   return (
     <div className="main">
       {authenticated ? (
-        <Main userid={userid}/>
+        <Main userid={userid} birthdate={birthdate}/>
       ) : (
         <Auth onSuccess={() => setAuthenticated(true)} setUserid={(index) => setUserid(index)}/>
       )}

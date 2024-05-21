@@ -22,6 +22,7 @@ const Login = ({ onSuccess, setUserid }:Props) => {
         setUserid(response.data.userid)
         console.log(response)
         localStorage.setItem('userid', response.data.userid)
+        localStorage.setItem('birthdate', response.data.birthdate)
         onSuccess()
       } else {
         setError('Invalid username or password');
