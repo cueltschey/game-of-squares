@@ -38,6 +38,18 @@ const getDate82YearsLater = (dateString :string ) => {
     return new Date(originalDate.setFullYear(originalDate.getFullYear() + 82));
 }
 
+const getDateRange = (date1: Date, date2 : Date) => {
+    const time1 = date1.getTime();
+    const time2 = date2.getTime();
+
+    const diffInMs = Math.abs(time1 - time2);
+    const msInDay = 24 * 60 * 60 * 1000;
+    const diffInDays = diffInMs / msInDay;
+
+    return diffInDays;
+}
+
+
 
 const Stats = ({userid,birthdate,setSummarySelected}:Props) => {
   const [summary, setSummary] = useState<Task[]>([])
@@ -45,6 +57,8 @@ const Stats = ({userid,birthdate,setSummarySelected}:Props) => {
   const currentMonth = currentDate.getMonth()
   const [monthIndex, setMonthIndex] = useState<number>(currentMonth)
   const averageDeathDate = getDate82YearsLater(birthdate)
+  const birthDateObj = new Date(birthdate)
+  const averageWeeksLived = 4275
 
   useEffect(() => {
   const getSummary = async () => {
@@ -65,7 +79,8 @@ const Stats = ({userid,birthdate,setSummarySelected}:Props) => {
   return (
     <div>
       <button onClick={() => setSummarySelected(0)}>Squares</button><br></br>
-      {birthdate}
+      <h1>one: {getDateRange(birthDateObj, currentDate)}</h1>
+      <h1>two: {getDateRange(currentDate, averageDeathDate)}</h1>
       {monthList[monthIndex]}
       {summary.length > 0? summary.filter(task => task.completed === 1).length / summary.length : 0}%
       <button onClick={() => setMonthIndex(monthIndex + 1)}>+</button>
