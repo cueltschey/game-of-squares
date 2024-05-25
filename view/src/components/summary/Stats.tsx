@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import "./Stats.css"
 
 interface Task {
   id: number;
@@ -59,6 +60,7 @@ const Stats = ({userid,birthdate,setSummarySelected}:Props) => {
   const averageDeathDate = getDate82YearsLater(birthdate)
   const birthDateObj = new Date(birthdate)
   const averageWeeksLived = 4275
+  const currentWeeksLived = getDateRange(birthDateObj, currentDate) / 7
 
   useEffect(() => {
   const getSummary = async () => {
@@ -79,9 +81,15 @@ const Stats = ({userid,birthdate,setSummarySelected}:Props) => {
   return (
     <div>
       <button onClick={() => setSummarySelected(0)}>Squares</button><br></br>
-      <h1>one: {getDateRange(birthDateObj, currentDate)}</h1>
-      <h1>two: {getDateRange(currentDate, averageDeathDate)}</h1>
+      <h1>{((getDateRange(birthDateObj, currentDate) / getDateRange(birthDateObj, averageDeathDate)) * 100).toFixed(2)}% to death</h1>
       {monthList[monthIndex]}
+      <ul className="weeks-lived">
+      {Array.from({ length: averageWeeksLived }, (_, index) => 
+          <div key={index} 
+          style={{height: "1vw", width: "1vw"}} 
+          className={index < parseInt(currentWeeksLived.toFixed(0))? "lived" : index === parseInt(currentWeeksLived.toFixed(0))? "week-highlight" : "unlived"} 
+          />)}
+      </ul>
       {summary.length > 0? summary.filter(task => task.completed === 1).length / summary.length : 0}%
       <button onClick={() => setMonthIndex(monthIndex + 1)}>+</button>
       <button onClick={() => setMonthIndex(monthIndex - 1)}>-</button></div>

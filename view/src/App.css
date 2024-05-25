@@ -29,7 +29,7 @@ body{
   background-color: #0a1115;
   z-index: 0;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 .main{
   display: grid;
