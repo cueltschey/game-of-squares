@@ -1,0 +1,32 @@
+.edit-title{
+  font-size: 40px;
+  text-align: center;
+}
+
+.edit-list{
+  margin: 10px;
+  list-style: none;
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.edit-item{
+  flex: 0 0 auto;
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid white;
+  border-radius: 4px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.task-delete{
+  margin: 2px;
+  padding: 1px;
+  text-align: center;
+  color: red;
+  background-color: black;
+  border-radius: 1px;
+  cursor: pointer;
+}

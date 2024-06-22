@@ -1,0 +1,43 @@
+Fails to load tasks on first square click (severe)
+
+Fails to update square color when editing (moderate)
+
+Cannot return to add tasks scree (moderate)
+
+Entire app crashes when new task is added and square is clicked (very severe)
+
+Numbers only refresh when page reloaded (moderate)
+
+February is skipped?! (severe)
+
+tasks to not shrink to fit box (slight)
+
+react split pane is being installed (terrible)
+
+
+notes:
+ summary needs improvement in styling
+
+Taks styling needs imporovement
+
+changes:
+
+Sqlite3 is good
+
+Move away from react? (react is good for changing data)
+
+change backend to go
+
+new features:
+
+sharing squares progress (make a snapshot url)
+
+add some level of auth (email verification)
+
+integrate github for daily contributions
+
+integrate anki for flashcards
+
+create a phone app version for android
+
+
