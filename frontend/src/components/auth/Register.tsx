@@ -26,34 +26,35 @@ const Register = ({ onSuccess, setUserid }:Props) =>  {
         onSuccess()
       }
     } catch (error) {
-      setError('Registration failed');
+      if(axios.isAxiosError(error) && error.response != undefined){
+        setError(error.response.data);
+      }
       console.error('Error:', error);
     }
   };
 
   return (
     <div className="login-container">
-      <h2>Registration</h2>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="formPair">
           <label>Username:</label>
           <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
         </div>
-        <div>
+        <div className="formPair">
           <label>Email:</label>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
-        <div>
+        <div className="formPair">
           <label>Birthdate:</label>
           <input type="date" value={birthdate} onChange={(e) => setBirthdate(e.target.value)} required />
         </div>
-        <div>
+        <div className="formPair">
           <label>Password:</label>
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </div>
         <button type="submit">Register</button>
       </form>
-      {error && <p>{error}</p>}
+      {error && <p style={{fontSize: "16px", color: "red"}}>{error}</p>}
     </div>
   );
 }
