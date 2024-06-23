@@ -65,7 +65,7 @@ const Stats = ({userid,birthdate,setSummarySelected}:Props) => {
   useEffect(() => {
   const getSummary = async () => {
     try {
-    const response = await fetch(`/summary/${userid}/${monthList[monthIndex]}`);
+    const response = await fetch(`/summary?userid=${userid}&month=${monthList[monthIndex]}`);
     if (!response.ok) {
       throw new Error('Failed to fetch data');
     }

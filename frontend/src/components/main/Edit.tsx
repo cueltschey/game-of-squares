@@ -48,9 +48,6 @@ interface Props {
 }
 
 
-
-
-
 const Edit = ({selected, squares, userid, taskTypes}:Props) => {
   const [tasks, setTasks] = useState<Task[]>([])
 
@@ -95,7 +92,7 @@ const Edit = ({selected, squares, userid, taskTypes}:Props) => {
         <>
           <h1 className="edit-title">
             {monthMap.get(squares[selected].date.split("-")[1])}
-            {" " + squares[selected].date.split("-")[2]}  {squares[selected].date.split("-")[0]}
+            {" " + squares[selected].date.split("T")[0].split("-")[2]}  {squares[selected].date.split("-")[0]}
           </h1>
           <ul className="edit-list" style={{userSelect: "none"}}>
             {tasks.map((task: Task, index: number) => (

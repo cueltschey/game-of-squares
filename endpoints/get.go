@@ -98,20 +98,10 @@ func GetListOfSquare(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	if !rows.Next() {
-		squares.UpdateTasksOfSquare(userID, squareID, database)
-
-		rows, err = database.Query(query, userID, squareID)
-		if err != nil {
-			log.Println(err)
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-			return
-		}
-		defer rows.Close()
-	}
-
 	var list []map[string]interface{}
+  hasRows := false
 	for rows.Next() {
+    hasRows = true
 		var id int
 		var userid int
 		var squareid int
@@ -131,6 +121,21 @@ func GetListOfSquare(w http.ResponseWriter, r *http.Request) {
 		}
 		list = append(list, item)
 	}
+
+  if !hasRows {
+		squares.UpdateTasksOfSquare(userID, squareID, database)
+    GetListOfSquare(w,r)
+/*
+		rows, err = database.Query(query, userID, squareID)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+		defer rows.Close()*/
+	}
+
+
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(list)
@@ -185,5 +190,88 @@ func GetTasksOfUser(w http.ResponseWriter, r *http.Request) {
 		log.Printf("JSON encoding error: %v\n", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
+}
+
+func GetMonthSummary(w http.ResponseWriter, r *http.Request) {
+
+  database := db.Get()
+
+	userIDStr := r.URL.Query().Get("userid")
+	monthStr := r.URL.Query().Get("month")
+
+	userID, err := strconv.ParseInt(userIDStr, 10, 64)
+	if err != nil {
+		log.Printf("Userid error: %v\n", err)
+		http.Error(w, "Bad Request: userid required", http.StatusBadRequest)
+		return
+	}
+
+	month, err := strconv.ParseInt(monthStr, 10, 64)
+	if err != nil {
+		log.Printf("Month error: %v\n", err)
+		http.Error(w, "Bad Request: month required", http.StatusBadRequest)
+		return
+	}
+
+	// Check if userid and month are valid
+	if userID == 0 || month == 0 || month < 1 || month > 12 {
+		http.Error(w, "Bad Request: valid userid and month required", http.StatusBadRequest)
+		return
+	}
+
+	query := `
+		SELECT l.* 
+		FROM list l 
+		JOIN squares s ON l.squareid = s.id 
+		WHERE l.userid = ? 
+		  AND strftime('%m', s.date) = ? 
+		  AND strftime('%Y', s.date) = strftime('%Y', 'now')
+	`
+	rows, err := database.Query(query, userID, fmt.Sprintf("%02d", month))
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var list []map[string]interface{}
+	columns, err := rows.Columns()
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	for rows.Next() {
+		values := make([]interface{}, len(columns))
+		valuePtrs := make([]interface{}, len(columns))
+		for i := range values {
+			valuePtrs[i] = &values[i]
+		}
+
+		err := rows.Scan(valuePtrs...)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
+		item := make(map[string]interface{})
+		for i, col := range columns {
+			val := values[i]
+			item[col] = val
+		}
+
+		list = append(list, item)
+	}
+
+	if err := rows.Err(); err != nil {
+		log.Println(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(list)
 }
 
