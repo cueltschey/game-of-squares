@@ -38,6 +38,7 @@ interface TaskType {
   name: string;
   description: string;
   userid: number;
+  disabled: number;
 }
 
 interface Props {
@@ -45,10 +46,11 @@ interface Props {
   selected : number;
   userid : number;
   taskTypes: TaskType[];
+  toggleReload: () => void;
 }
 
 
-const Edit = ({selected, squares, userid, taskTypes}:Props) => {
+const Edit = ({selected, squares, userid, taskTypes, toggleReload}:Props) => {
   const [tasks, setTasks] = useState<Task[]>([])
 
   useEffect(() => {
@@ -64,11 +66,13 @@ const Edit = ({selected, squares, userid, taskTypes}:Props) => {
     console.error('Error fetching data:', error);
     }
   };
-  getList()
+  if(selected > 0){
+    getList()
+  }
   }, [selected])
   const handleCheckboxChange = async (listId: number, isChecked: boolean) => {
     try {
-      const response = await fetch(`/update/${userid}/${listId}?completed=${isChecked ? 1 : 0}`, {
+      const response = await fetch(`/update?userid=${userid}&listid=${listId}&completed=${isChecked ? 1 : 0}`, {
         method: 'POST'
       });
       if (!response.ok) {
@@ -81,6 +85,7 @@ const Edit = ({selected, squares, userid, taskTypes}:Props) => {
                 return task;
             });
             setTasks(updatedTasks);
+      toggleReload()
     } catch (error) {
       console.error('Error updating task:', error);
     }
@@ -103,8 +108,8 @@ const Edit = ({selected, squares, userid, taskTypes}:Props) => {
                   onChange={(e) => handleCheckboxChange(task.id, e.target.checked)}
                 />
                 <ul style={{display: "inline-flex", listStyle: "none", flexDirection: "column", gap: "10px"}}>
-                <li>{taskTypes[task.taskid - 1].name}</li>
-                <li>{taskTypes[task.taskid - 1].description}</li>
+                <li>{taskTypes.filter(taskType => taskType.taskid === task.taskid)[0].name}</li>
+                <li>{taskTypes.filter(taskType => taskType.taskid === task.taskid)[0].description}</li>
                 </ul>
               </li>
             ))}

@@ -10,6 +10,7 @@ interface TaskType {
   name: string;
   description: string;
   userid: number;
+  disabled: number;
 }
 
 const Task = ({userid}:Props) => {
@@ -74,7 +75,7 @@ const Task = ({userid}:Props) => {
   return (
     <div>
       <ul className="edit-list">
-        {tasks.map((task: TaskType, index: number) => (
+        {tasks.filter(taskType => taskType.disabled === 0).map((task: TaskType, index: number) => (
       <li key={index}
           className="edit-item"
       >

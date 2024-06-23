@@ -11,14 +11,15 @@ const Register = ({ onSuccess, setUserid }:Props) =>  {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [birthdate, setBirthdate] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e : any) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/register', { username, email, password });
-      if (response.status === 201) {
+      const response = await axios.post('/register', { username, email, password, birthdate });
+      if (response.status === 200) {
         // Registration successful
         setUserid(response.data.userid)
         localStorage.setItem('userid', response.data.userid)
@@ -41,6 +42,10 @@ const Register = ({ onSuccess, setUserid }:Props) =>  {
         <div>
           <label>Email:</label>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </div>
+        <div>
+          <label>Birthdate:</label>
+          <input type="date" value={birthdate} onChange={(e) => setBirthdate(e.target.value)} required />
         </div>
         <div>
           <label>Password:</label>

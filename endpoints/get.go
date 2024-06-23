@@ -123,16 +123,35 @@ func GetListOfSquare(w http.ResponseWriter, r *http.Request) {
 	}
 
   if !hasRows {
-		squares.UpdateTasksOfSquare(userID, squareID, database)
-    GetListOfSquare(w,r)
-/*
-		rows, err = database.Query(query, userID, squareID)
+    squares.UpdateTasksOfSquare(userID, squareID, database)
+    rows, err := database.Query(query, userID, squareID)
 		if err != nil {
 			log.Println(err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
-		defer rows.Close()*/
+		defer rows.Close()
+    for rows.Next() {
+		var id int
+		var userid int
+		var squareid int
+		var taskid int
+		var completed int
+		err := rows.Scan(&id, &userid, &squareid, &taskid, &completed)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		item := map[string]interface{}{
+			"id":        id,
+			"userid":    userid,
+			"squareid":  squareid,
+			"taskid":    taskid,
+			"completed": completed,
+		}
+		list = append(list, item)
+	 }
+
 	}
 
 
@@ -165,7 +184,8 @@ func GetTasksOfUser(w http.ResponseWriter, r *http.Request) {
 		var name string
 		var description string
 		var userid int
-		err := rows.Scan(&taskid, &name, &description, &userid)
+    var disabled int
+		err := rows.Scan(&taskid, &name, &description, &userid, &disabled)
 		if err != nil {
 			log.Println(err)
 			continue
@@ -175,6 +195,7 @@ func GetTasksOfUser(w http.ResponseWriter, r *http.Request) {
 			"name":          name,
 			"description":   description,
 			"userid":        userid,
+			"disabled":      disabled,
 		}
 		tasks = append(tasks, item)
 	}

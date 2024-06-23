@@ -61,9 +61,7 @@ function iterateDaysBefore(squares: Square[]) {
 
 function getMonthSpan(dateString : string) {
     // Parse the date string
-    const [year, month, day] = dateString.split('-').map(Number);
-    console.log(day)
-
+    const [year, month, _] = dateString.split('-').map(Number);
     // Create a Date object for the given month
     const firstDayOfMonth = new Date(year, month - 1, 1); // Note: month is 0-indexed
     const lastDayOfMonth = new Date(year, month, 0);

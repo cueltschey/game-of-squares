@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
 import Auth from "./components/auth/Auth.tsx"
 import Main from "./components/main/Main.tsx"
 import "./App.css"
@@ -11,13 +10,24 @@ function App() {
   const [userid, setUserid] = useState(storedId);
 
   useEffect(() => {
-    // Check if the authenticated cookie exists
-    const isAuthenticatedCookie = Cookies.get('authenticated');
-
-    if (isAuthenticatedCookie) {
-      setAuthenticated(true);
+  const verifyAuth = async () => {
+    try {
+    const response = await fetch(`/verify`);
+    if (!response.ok) {
+       setAuthenticated(false)
     }
-  }, []);
+    const jsonData = await response.json();
+    if(jsonData.authenticated === 1){
+      setAuthenticated(true)
+      setUserid(jsonData.userid)
+    }
+    } catch (error) {
+    console.error('Error fetching data:', error);
+    }
+  };
+  verifyAuth()
+  }, [])
+
 
   return (
     <div className="main">

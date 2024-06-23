@@ -27,7 +27,8 @@ CREATE TABLE list (
 CREATE TABLE tasks (
   taskid INTEGER PRIMARY KEY,
   name VARCHAR(255),
-  description TEXT
+  description TEXT,
+  disabled INT DEFAULT 0
 );
 
 INSERT INTO tasks (name, description) VALUES ('Github', 'Must');

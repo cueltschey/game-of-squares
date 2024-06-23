@@ -22,6 +22,7 @@ interface TaskType {
   name: string;
   description: string;
   userid: number;
+  disabled: number;
 }
 
 const  Main = ({userid, birthdate}:Props) => {
@@ -32,24 +33,10 @@ const  Main = ({userid, birthdate}:Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isResizingRef = useRef<boolean>(false);
   const [summarySelected, setSummarySelected] = useState<number>(0)
+  const [reload, setReload] = useState<boolean>(false)
 
   useEffect(() => {
-    const getSquares = async () => {
-      try {
-        const response = await fetch(`/squares?userid=${userid}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const jsonData = await response.json();
-        setSquares(jsonData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    getSquares();
-
-    const getTypes = async () => {
+        const getTypes = async () => {
       try {
         const response = await fetch(`/tasks?userid=${userid}`);
         if (!response.ok) {
@@ -99,6 +86,22 @@ const  Main = ({userid, birthdate}:Props) => {
     };
   }, []);
 
+  useEffect(() => {
+    const getSquares = async () => {
+        try {
+          const response = await fetch(`/squares?userid=${userid}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch data');
+          }
+          const jsonData = await response.json();
+          setSquares(jsonData);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+      getSquares();
+  }, [reload])
+
   const handleMouseDown = () => {
     isResizingRef.current = true;
   };
@@ -112,6 +115,7 @@ const  Main = ({userid, birthdate}:Props) => {
           squares={squares}
           userid={userid}
           taskTypes={taskTypes}
+          toggleReload={() => setReload(!reload)}
         />
       </div>
       <div className="divider" onMouseDown={handleMouseDown}></div>

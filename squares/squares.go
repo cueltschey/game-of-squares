@@ -48,7 +48,7 @@ func AddSquaresFromLast(userid int64, db *sql.DB) {
 
 
 func UpdateTasksOfSquare(userid int64, squareid int64, db *sql.DB) {
-	rows, err := db.Query("SELECT taskid FROM tasks")
+	rows, err := db.Query("SELECT taskid FROM tasks WHERE disabled = 0")
 	if err != nil {
     log.Printf("UpdateTasksOfSquare(): %v\n", err)
 	}
@@ -107,7 +107,14 @@ func CreateFirstSquare(userid int64, db *sql.DB) {
 		if err != nil {
       log.Printf("CreateFirstSquare(): %v\n", err)
 		} else {
-			fmt.Printf("New entry inserted for %s with userid: %d\n", currentDate, userid)
+			fmt.Printf("New square inserted for %s with userid: %d\n", currentDate, userid)
+		}
+    _, err = db.Exec("INSERT INTO tasks (name, description, userid) VALUES ('Example Task', 'Click to add and remove tasks', ?)",
+    userid)
+    if err != nil {
+      log.Printf("CreateFirstSquare(): %v\n", err)
+		} else {
+			fmt.Printf("New task inserted for %s with userid: %d\n", currentDate, userid)
 		}
 	} else {
 		fmt.Printf("Entry already exists for %s\n", currentDate)

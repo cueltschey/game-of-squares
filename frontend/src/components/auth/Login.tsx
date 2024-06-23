@@ -20,7 +20,6 @@ const Login = ({ onSuccess, setUserid }:Props) => {
       if (response.status === 200) {
         // Authentication successful
         setUserid(response.data.userid)
-        console.log(response)
         localStorage.setItem('userid', response.data.userid)
         localStorage.setItem('birthdate', response.data.birthdate)
         onSuccess()

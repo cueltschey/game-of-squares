@@ -1,50 +1,41 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
   "os"
-  "log"
 
   "game-of-squares/endpoints"
   "game-of-squares/db"
-)
 
-func tasksHandler(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodGet:
-		endpoints.GetTasksOfUser(w, r)
-	case http.MethodPost:
-    log.Printf("Not implemented")
-	case http.MethodDelete:
-    log.Printf("Not implemented")
-	default:
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-	}
-}
+	"github.com/gorilla/mux"
+)
 
 func main() {
   // Open Database
   db.Init()
 
+  r := mux.NewRouter()
+
   // GET
-  fs := http.FileServer(http.Dir("frontend/dist/"))
-	http.Handle("/", fs)
-  http.HandleFunc("/squares", endpoints.GetSquaresForUser)
-  http.HandleFunc("/list", endpoints.GetListOfSquare)
-  http.HandleFunc("/tasks", tasksHandler)
-  http.HandleFunc("/summary", endpoints.GetMonthSummary)
+  r.HandleFunc("/squares", endpoints.GetSquaresForUser).Methods("GET")
+  r.HandleFunc("/list", endpoints.GetListOfSquare).Methods("GET")
+  r.HandleFunc("/tasks", endpoints.GetTasksOfUser).Methods("GET")
+  r.HandleFunc("/summary", endpoints.GetMonthSummary).Methods("GET")
+  r.HandleFunc("/verify", endpoints.VerifyAuth).Methods("GET")
 
   // POST
-  http.HandleFunc("/login", endpoints.HandleLogin)
+  r.HandleFunc("/login", endpoints.HandleLogin).Methods("POST")
+  r.HandleFunc("/register", endpoints.RegisterUser).Methods("POST")
+  r.HandleFunc("/update", endpoints.UpdateListEntry).Methods("POST")
+
+  // File server
+  fs := http.FileServer(http.Dir("frontend/dist/"))
+	r.PathPrefix("/").Handler(fs)
 
 
 
   // Run the server
   port := os.Args[1]
-  fmt.Printf("Server Listening on: http://localhost:%s\n\n", port)
-	if err := http.ListenAndServe(":" + port, nil); err != nil {
-    log.Printf("Main() failed to start server: %v\n", err)
-	}
+  http.ListenAndServe(":" + port, r)
 }
 
