@@ -19,6 +19,12 @@ const Task = ({userid}:Props) => {
   const [name, setName] = useState<string>("")
   const [description, setDescription] = useState<string>("")
 
+  const getCurrentFormattedDate = () => {
+    const currentDate = new Date();
+    const options : Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: '2-digit' };
+    return currentDate.toLocaleDateString('en-US', options);
+  };
+
   useEffect(() => {
   const getTasks = async () => {
     try {
@@ -73,30 +79,34 @@ const Task = ({userid}:Props) => {
   }
   
   return (
-    <div>
+    <div style={{display:"flex",flexDirection:"column"}}>
+      <h1 className="edit-title">{getCurrentFormattedDate()}</h1>
       <ul className="edit-list">
         {tasks.filter(taskType => taskType.disabled === 0).map((task: TaskType, index: number) => (
       <li key={index}
           className="edit-item"
       >
-        <span className="task-delete" onClick={() => deleteTask(task.taskid)}>X</span>
-        {task.name}{task.description}
+        <ul style={{listStyle:"none"}}>
+          <li className="edit-item-header">{task.name}</li>
+          <li className="edit-item-footer">{task.description}</li>
+        </ul>
+        <span className="task-delete" onClick={() => deleteTask(task.taskid)}>x</span>
       </li>
     ))}</ul>
-      <div>
-          <input
-            type="text"
-            placeholder="Task Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <textarea
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <button onClick={() => addTask()}>Add Task</button>
-        </div>
+      <input
+        id="taskname"
+        type="text"
+        placeholder="Task Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <textarea
+        id="taskdesc"
+        placeholder="Description"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
+      <button onClick={() => addTask()} style={{margin: "10px"}}>Add</button>
     </div>
   )
 }

@@ -20,7 +20,6 @@ func main() {
   r.HandleFunc("/squares", endpoints.GetSquaresForUser).Methods("GET")
   r.HandleFunc("/list", endpoints.GetListOfSquare).Methods("GET")
   r.HandleFunc("/tasks", endpoints.GetTasksOfUser).Methods("GET")
-  r.HandleFunc("/summary", endpoints.GetMonthSummary).Methods("GET")
   r.HandleFunc("/verify", endpoints.VerifyAuth).Methods("GET")
 
   // POST

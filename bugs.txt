@@ -1,18 +1,18 @@
-Fails to load tasks on first square click (severe)
++++Fails to load tasks on first square click (severe)
 
-Fails to update square color when editing (moderate)
++++Fails to update square color when editing (moderate)
 
-Cannot return to add tasks scree (moderate)
+Cannot return to add tasks screen (moderate)
 
-Entire app crashes when new task is added and square is clicked (very severe)
++++Entire app crashes when new task is added and square is clicked (very severe)
 
-Numbers only refresh when page reloaded (moderate)
++++Numbers only refresh when page reloaded (moderate)
 
-February is skipped?! (severe)
++++February is skipped?! (severe)
 
 tasks to not shrink to fit box (slight)
 
-react split pane is being installed (terrible)
++++react split pane is being installed (terrible)
 
 
 notes:

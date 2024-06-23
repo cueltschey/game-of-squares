@@ -89,7 +89,7 @@ const Squares = ({squares, selected, setSelected}:Props) => {
       <>
         {isWithinInterval(new Date(square.date), getMonthSpan(square.date))? <></> :
             <>
-            <div style={{width:"100%", height:"20px"}}>{parseInt(square.date.split("-")[1]) !== 12? monthMap.get(`0${parseInt(square.date.split("-")[1]) + 1}`) : monthMap.get("01")}</div>
+            <div style={{width:"100%", height:"20px"}}>{monthMap.get(square.date.split("-")[1])}</div>
             <div style={{width: "2.1vw", height: "2vw"}} />
             </>
             }
@@ -100,7 +100,7 @@ const Squares = ({squares, selected, setSelected}:Props) => {
             {"backgroundColor":
             `rgb(${34 + ((square.total - square.completed) / square.total) * 50},${34 + ((square.completed / square.total) * 200)},${34 + (square.completed / square.total) * 100})`}}
           onClick={() => setSelected(index)}>
-            <span>{square.completed}:{square.total}</span>
+            <span style={{fontSize:"1vw"}}>{square.completed}:{square.total}</span>
           </li>
       </>
     ))}

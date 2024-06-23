@@ -7,26 +7,48 @@
   margin: 10px;
   list-style: none;
   display: inline-flex;
-  flex-wrap: wrap;
+  flex-direction: column;
 }
 
 .edit-item{
-  flex: 0 0 auto;
+  max-width: 25vw;
   padding: 10px;
   margin: 5px;
   border: 1px solid white;
   border-radius: 4px;
   font-size: 20px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
 .task-delete{
-  margin: 2px;
-  padding: 1px;
+  padding: 3px;
   text-align: center;
-  color: red;
-  background-color: black;
-  border-radius: 1px;
   cursor: pointer;
 }
+
+.edit-item-header {
+  font-size: 20px;
+}
+
+
+.edit-item-footer {
+  font-size: 15px;
+  color: grey;
+}
+
+#taskdesc {
+  max-width: 25vw;
+  margin: 10px;
+  height: 200px;
+  color: black;
+}
+
+
+#taskname {
+  max-width: 25vw;
+  color: black;
+}
+
+

@@ -8,11 +8,11 @@
 }
 
 .lived{
-  background-color: green;
+  background-color: #026136;
 }
 
 .unlived {
-  background-color: grey;
+  background-color: #2f4066;
 }
 
 .week-highlight {

@@ -31,12 +31,6 @@ body{
   position: relative;
   overflow-x: hidden;
 }
-.main{
-  display: grid;
-  row-gap: 20px;
-  background-color: #0a1115;
-  min-height: 100vh;
-}
 a{
   color: turquoise;
   text-decoration: none;
@@ -44,10 +38,7 @@ a{
 }
 
 button {
-  border-radius: 4px;
-  background-color: #34aa34;
-  color: white;
-  border: 1px solid black;
+  border-radius: 5px;
   width: min-content;
 }
 

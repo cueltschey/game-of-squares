@@ -107,9 +107,10 @@ const  Main = ({userid, birthdate}:Props) => {
   };
 
   return (
-  summarySelected === 0 ? (
-    <div className="split-pane" ref={containerRef}>
-      <div className="pane" style={{ width: leftPaneWidth }}>
+  <div className="main" style={{height: "100%"}}>
+  {summarySelected === 0 ? (
+    <div className="split-pane" ref={containerRef} style={{borderBottom: "1px solid white"}}>
+      <div className="pane" style={{ width: leftPaneWidth, overflowX: "hidden" }}>
         <Edit
           selected={selected}
           squares={squares}
@@ -120,7 +121,7 @@ const  Main = ({userid, birthdate}:Props) => {
       </div>
       <div className="divider" onMouseDown={handleMouseDown}></div>
       <div className="pane" style={{ flex: 1 }}>
-        <button onClick={() => setSummarySelected(1)}>Summary</button>
+        <button onClick={() => setSelected(-1)}>&laquo;</button>
         <Squares
           squares={squares}
           setSelected={(index: number) => setSelected(index)}
@@ -129,13 +130,33 @@ const  Main = ({userid, birthdate}:Props) => {
       </div>
     </div>
   ) : (
-    <Stats
-      userid={userid}
-      birthdate={birthdate}
-      setSummarySelected={(index) => setSummarySelected(index)}
-    />
+    <div className="split-pane" ref={containerRef} style={{borderBottom: "1px solid white"}}>
+      <div className="pane" style={{ width: leftPaneWidth, overflowX: "hidden" }}>
+        <Edit
+          selected={selected}
+          squares={squares}
+          userid={userid}
+          taskTypes={taskTypes}
+          toggleReload={() => setReload(!reload)}
+        />
+      </div>
+      <div className="divider" onMouseDown={handleMouseDown}></div>
+      <div className="pane" style={{ flex: 1 }}>
+        <button onClick={() => setSelected(-1)}>&laquo;</button>
+        <Stats
+          birthdate={birthdate}
+        />
+      </div>
+    </div>
+
   )
-);
+  }
+    <div style={{height: "5vh", display: "flex", justifyContent: "right", margin: "10px 40px 10px 10px"}}>
+    <button onClick={() => setSummarySelected(0)} className={summarySelected === 0? "hi" : "dull"}>Squares</button>
+    <button onClick={() => setSummarySelected(1)} className={summarySelected === 1? "hi" : "dull"}>Overview</button>
+    </div>
+  </div>
+  )
 }
 
 export default Main;

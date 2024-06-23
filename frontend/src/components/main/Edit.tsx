@@ -107,9 +107,9 @@ const Edit = ({selected, squares, userid, taskTypes, toggleReload}:Props) => {
                   checked={task.completed === 1}
                   onChange={(e) => handleCheckboxChange(task.id, e.target.checked)}
                 />
-                <ul style={{display: "inline-flex", listStyle: "none", flexDirection: "column", gap: "10px"}}>
-                <li>{taskTypes.filter(taskType => taskType.taskid === task.taskid)[0].name}</li>
-                <li>{taskTypes.filter(taskType => taskType.taskid === task.taskid)[0].description}</li>
+                <ul style={{listStyle:"none"}}>
+                <li className="edit-item-header">{taskTypes.filter(taskType => taskType.taskid === task.taskid)[0].name}</li>
+                <li className="edit-item-footer">{taskTypes.filter(taskType => taskType.taskid === task.taskid)[0].description}</li>
                 </ul>
               </li>
             ))}
