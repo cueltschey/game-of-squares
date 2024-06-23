@@ -18,6 +18,8 @@ func main() {
   fs := http.FileServer(http.Dir("frontend/dist/"))
 	http.Handle("/", fs)
   http.HandleFunc("/squares", endpoints.GetSquaresForUser)
+  http.HandleFunc("/list", endpoints.GetListOfSquare)
+  http.HandleFunc("/tasks", endpoints.GetTasksOfUser)
 
 
 

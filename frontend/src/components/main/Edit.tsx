@@ -57,7 +57,7 @@ const Edit = ({selected, squares, userid, taskTypes}:Props) => {
   useEffect(() => {
   const getList = async () => {
     try {
-    const response = await fetch(`/list/${userid}/${squares[selected].id}`);
+    const response = await fetch(`/list?userid=${userid}&squareid=${squares[selected].id}`);
     if (!response.ok) {
       throw new Error('Failed to fetch data');
     }

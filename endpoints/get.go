@@ -13,7 +13,6 @@ import (
 
 
 func GetSquaresForUser(w http.ResponseWriter, r *http.Request) {
-  // TODO: change frontend squares query
   database := db.Get()
   userIDStr := r.URL.Query().Get("userid")
 	userID, err := strconv.ParseInt(userIDStr, 10, 64)
@@ -69,15 +68,17 @@ func GetListOfSquare(w http.ResponseWriter, r *http.Request) {
 	// Parse userid and squareid from URL parameters
   database := db.Get()
 
-	userIDStr := r.URL.Query().Get(":userid")
-	squareIDStr := r.URL.Query().Get(":squareid")
+	userIDStr := r.URL.Query().Get("userid")
+	squareIDStr := r.URL.Query().Get("squareid")
 	userID, err := strconv.ParseInt(userIDStr, 10, 64)
 	if err != nil {
+    log.Printf("Userid error: %v\n", err)
 		http.Error(w, "Bad Request: userid required", http.StatusBadRequest)
 		return
 	}
 	squareID, err := strconv.ParseInt(squareIDStr, 10, 64)
 	if err != nil {
+    log.Printf("Squareid error: %v\n", err)
 		http.Error(w, "Bad Request: squareid required", http.StatusBadRequest)
 		return
 	}
@@ -134,3 +135,55 @@ func GetListOfSquare(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(list)
 }
+
+func GetTasksOfUser(w http.ResponseWriter, r *http.Request) {
+
+  database := db.Get()
+	userIDStr := r.URL.Query().Get("userid")
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil || userID == 0 {
+		http.Error(w, "Bad Request: userid required", http.StatusBadRequest)
+		return
+	}
+
+	rows, err := database.Query("SELECT * FROM tasks WHERE userid = ?", userID)
+	if err != nil {
+		log.Printf("Database error: %v\n", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var tasks []map[string]interface{}
+	for rows.Next() {
+		var taskid int
+		var name string
+		var description string
+		var userid int
+		err := rows.Scan(&taskid, &name, &description, &userid)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		item := map[string]interface{}{
+			"taskid":        taskid,
+			"name":          name,
+			"description":   description,
+			"userid":        userid,
+		}
+		tasks = append(tasks, item)
+	}
+
+	if err := rows.Err(); err != nil {
+		log.Printf("Rows iteration error: %v\n", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(tasks); err != nil {
+		log.Printf("JSON encoding error: %v\n", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+}
+
