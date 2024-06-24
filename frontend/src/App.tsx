@@ -4,6 +4,7 @@ import Main from "./components/main/Main.tsx"
 import "./App.css"
 
 function App() {
+  document.title = "Game of Squares"
   const [authenticated, setAuthenticated] = useState(false);
   const storedId : number = parseInt(localStorage.getItem('userid') || '0')
   const birthdate : string = localStorage.getItem('birthdate') || '2000-01-01'
